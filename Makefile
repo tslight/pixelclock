@@ -30,7 +30,7 @@ install: all
 	$(INSTALL_PROGRAM) $(PROG) $(BINDIR)
 
 clean:
-	rm -f $(PROG) $(OBJS) 
+	rm -f $(PROG) $(OBJS)
 
 release: all
 	@mkdir $(PROG)-${VERS}

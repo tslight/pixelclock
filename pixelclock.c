@@ -144,7 +144,7 @@ main(int argc, char* argv[])
 			x.size = strtol(optarg, &p, 10);
 			if (*p || x.size < 1)
 				errx(1, "illegal value -- %s", optarg);
-				/* NOTREACHED */
+			/* NOTREACHED */
 			break;
 
 		default:
@@ -197,24 +197,43 @@ main(int argc, char* argv[])
 
 	/* each hour will be this many pixels away */
 	hourtick = ((x.position == 'b' || x.position == 't') ? x.dpy_width :
-		x.dpy_height) / 24;
+		    x.dpy_height) / 24;
 
 	for (;;) {
+		fd_set fds; // Set of file descriptors for select()
+		int xfd = ConnectionNumber(x.dpy);
+		FD_ZERO(&fds);     // Clear the set of file descriptors
+		FD_SET(xfd, &fds); // Add the X server connection to the set
+		tv[0].tv_sec = 1;     // Set timeout to 1 second
+		tv[0].tv_usec = 0;    // No microseconds
+
+		// Wait for either an X event or a 1-second timeout
+		int ret = select(xfd + 1, &fds, NULL, NULL, &tv[0]);
+
+		if (ret > 0) { // At least one X event
+			while (XPending(x.dpy)) {
+				XNextEvent(x.dpy, &event);
+				if (event.type == EnterNotify) {
+					showdiagbox();
+				} else if (event.type == LeaveNotify) {
+					disposediagbox();
+				} else if (event.type == Expose) {
+					lastpos = -1;
+				}
+			}
+		}
+
 		if (gettimeofday(&tv[0], NULL))
 			errx(1, "gettimeofday");
-			/* NOTREACHED */
+		/* NOTREACHED */
 
 		now = tv[0].tv_sec;
 		if ((t = localtime(&now)) == NULL)
 			errx(1, "localtime");
-			/* NOTREACHED */
+		/* NOTREACHED */
 
 		newpos = (hourtick * t->tm_hour) +
 			(float)(((float)t->tm_min / 60.0) * hourtick) - 3;
-
-		/* check if we just got exposed */
-		bzero(&event, sizeof(XEvent));
-		XCheckWindowEvent(x.dpy, x.win, ExposureMask, &event);
 
 		/* only redraw if our time changed enough to move the box or if
 		 * we were just exposed */
@@ -222,42 +241,40 @@ main(int argc, char* argv[])
 			XClearWindow(x.dpy, x.win);
 
 			/* draw the current time */
-			XSetForeground(x.dpy, x.gc, getcolor("yellow"));
+			XSetForeground(x.dpy, x.gc, x.yellow);
 			if (x.position == 'b' || x.position == 't')
 				XFillRectangle(x.dpy, x.win, x.gc,
-					newpos, 0, 6, x.size);
+					       newpos, 0, 6, x.size);
 			else
 				XFillRectangle(x.dpy, x.win, x.gc,
-					0, newpos, x.size, 6);
+					       0, newpos, x.size, 6);
 
 			/* draw the hour ticks */
-			XSetForeground(x.dpy, x.gc, getcolor("blue"));
+			XSetForeground(x.dpy, x.gc, x.magenta);
 			for (y = 1; y <= 23; y++)
 				if (x.position == 'b' || x.position == 't')
 					XFillRectangle(x.dpy, x.win, x.gc,
-						(y * hourtick), 0, 2, x.size);
+						       (y * hourtick), 0, 2, x.size);
 				else
 					XFillRectangle(x.dpy, x.win, x.gc,
-						0, (y * hourtick), x.size, 2);
+						       0, (y * hourtick), x.size, 2);
 
 			/* highlight requested times */
-			XSetForeground(x.dpy, x.gc, getcolor("green"));
+			XSetForeground(x.dpy, x.gc, x.green);
 			for (i = 0; i < nhihours; i++)
 				if (x.position == 'b' || x.position == 't')
 					XFillRectangle(x.dpy, x.win, x.gc,
-						(hihours[i] * hourtick), 0,
-						2, x.size);
+						       (hihours[i] * hourtick), 0,
+						       2, x.size);
 				else
 					XFillRectangle(x.dpy, x.win, x.gc,
-						0, (hihours[i] * hourtick),
-						x.size, 2);
+						       0, (hihours[i] * hourtick),
+						       x.size, 2);
 
 			lastpos = newpos;
 
 			XFlush(x.dpy);
 		}
-
-		sleep(1);
 	}
 
 	exit(1);

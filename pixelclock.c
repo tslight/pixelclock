@@ -50,7 +50,7 @@
 #include <X11/Xft/Xft.h>
 
 /* default clock size */
-#define DEFSIZE 3
+#define DEFSIZE 4
 
 /* default position is along the right side */
 #define DEFPOS 'r'
@@ -87,6 +87,7 @@ const struct option longopts[] = {
 	{ "right",	no_argument,		NULL,	'r' },
 	{ "top",	no_argument,		NULL,	't' },
 	{ "bottom",	no_argument,		NULL,	'b' },
+	{ "help",	no_argument,		NULL,	'h' },
 
 	{ NULL,		0,			NULL,	0 }
 };
@@ -135,7 +136,7 @@ main(int argc, char* argv[])
 			if (x.position)
 				errx(1, "only one of -top, -bottom, -left, "
 				     "-right allowed");
-			/* NOTREACHED */
+				/* NOTREACHED */
 
 			x.position = c;
 			break;
@@ -144,9 +145,10 @@ main(int argc, char* argv[])
 			x.size = strtol(optarg, &p, 10);
 			if (*p || x.size < 1)
 				errx(1, "illegal value -- %s", optarg);
-			/* NOTREACHED */
+				/* NOTREACHED */
 			break;
-
+		case 'h':
+			usage();
 		default:
 			usage();
 			/* NOTREACHED */
@@ -225,12 +227,12 @@ main(int argc, char* argv[])
 
 		if (gettimeofday(&tv[0], NULL))
 			errx(1, "gettimeofday");
-		/* NOTREACHED */
+			/* NOTREACHED */
 
 		now = tv[0].tv_sec;
 		if ((t = localtime(&now)) == NULL)
 			errx(1, "localtime");
-		/* NOTREACHED */
+			/* NOTREACHED */
 
 		newpos = (hourtick * t->tm_hour) +
 			(float)(((float)t->tm_min / 60.0) * hourtick) - 3;
@@ -291,7 +293,7 @@ init_x(const char *display)
 
 	if (!(x.dpy = XOpenDisplay(display)))
 		errx(1, "unable to open display %s", XDisplayName(display));
-	/* NOTREACHED */
+		/* NOTREACHED */
 
 	x.screen = DefaultScreen(x.dpy);
 
@@ -338,7 +340,7 @@ init_x(const char *display)
 
 	if (!(rc = XStringListToTextProperty(&win_name, 1, &win_name_prop)))
 		errx(1, "XStringListToTextProperty");
-	/* NOTREACHED */
+		/* NOTREACHED */
 
 	XSetWMName(x.dpy, x.win, &win_name_prop);
 
@@ -349,7 +351,7 @@ init_x(const char *display)
 
 	if (!(x.gc = XCreateGC(x.dpy, x.win, 0, &values)))
 		errx(1, "XCreateGC");
-	/* NOTREACHED */
+		/* NOTREACHED */
 
 	XMapWindow(x.dpy, x.win);
 
@@ -452,7 +454,10 @@ void
 usage(void)
 {
 	fprintf(stderr, "usage: %s %s\n", __progname,
-		"[-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] "
-		"[time time2 ...]");
+		"[-display host:dpy] "
+		"[-help] "
+		"[-left|-right|-top|-bottom] "
+		"[-size <pixels>] "
+		"[time1 time2 ... <HH:MM>]");
 	exit(1);
 }

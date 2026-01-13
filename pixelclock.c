@@ -291,7 +291,7 @@ init_x(const char *display)
 
 	if (!(x.dpy = XOpenDisplay(display)))
 		errx(1, "unable to open display %s", XDisplayName(display));
-		/* NOTREACHED */
+	/* NOTREACHED */
 
 	x.screen = DefaultScreen(x.dpy);
 
@@ -299,6 +299,11 @@ init_x(const char *display)
 	x.dpy_height = DisplayHeight(x.dpy, x.screen);
 
 	x.win_colormap = DefaultColormap(x.dpy, DefaultScreen(x.dpy));
+	/* Minimize calls to getcolor */
+	x.black   = getcolor("black");
+	x.yellow  = getcolor("yellow");
+	x.magenta = getcolor("magenta");
+	x.green   = getcolor("green");
 
 	switch (x.position) {
 	case 'b':
@@ -328,14 +333,12 @@ init_x(const char *display)
 	}
 
 	x.win = XCreateSimpleWindow(x.dpy, RootWindow(x.dpy, x.screen),
-			left, top, width, height,
-			0,
-			BlackPixel(x.dpy, x.screen),
-			BlackPixel(x.dpy, x.screen));
+				    left, top, width, height,
+				    0, x.black, x.black);
 
 	if (!(rc = XStringListToTextProperty(&win_name, 1, &win_name_prop)))
 		errx(1, "XStringListToTextProperty");
-		/* NOTREACHED */
+	/* NOTREACHED */
 
 	XSetWMName(x.dpy, x.win, &win_name_prop);
 
@@ -346,7 +349,7 @@ init_x(const char *display)
 
 	if (!(x.gc = XCreateGC(x.dpy, x.win, 0, &values)))
 		errx(1, "XCreateGC");
-		/* NOTREACHED */
+	/* NOTREACHED */
 
 	XMapWindow(x.dpy, x.win);
 

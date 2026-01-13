@@ -41,11 +41,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <sys/types.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/Xft/Xft.h>
 
 /* default clock size */
 #define DEFSIZE 3

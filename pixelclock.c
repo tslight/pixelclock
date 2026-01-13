@@ -134,8 +134,8 @@ main(int argc, char* argv[])
 		case 'r':
 			if (x.position)
 				errx(1, "only one of -top, -bottom, -left, "
-				    "-right allowed");
-				/* NOTREACHED */
+				     "-right allowed");
+			/* NOTREACHED */
 
 			x.position = c;
 			break;

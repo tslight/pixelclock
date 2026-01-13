@@ -93,10 +93,15 @@ const struct option longopts[] = {
 
 extern char *__progname;
 
+/* dialog window */
+Window winstat = -1;
+
 long	getcolor(const char *);
 void	handler(int sig);
 void	init_x(const char *);
 void	usage(void);
+void    showdiagbox(void);
+void    disposediagbox(void);
 
 int
 main(int argc, char* argv[])

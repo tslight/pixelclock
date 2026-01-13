@@ -1,16 +1,19 @@
-/* vim:ts=8
+/* -*- tab-width: 8; c-basic-offset: 8; indent-tabs-mode: t -*-
+ * vim:ts=8
+ *
  * $Id: pixelclock.c,v 1.8 2009/03/09 06:35:26 jcs Exp $
  *
  * pixelclock
  * a different way of looking at time
  *
+ * Copyright (c) 2025 Toby Slight <tslight@pm.me>
  * Copyright (c) 2005,2008-2009 joshua stein <jcs@jcs.org>
  * Copyright (c) 2005 Federico G. Schwindt
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright

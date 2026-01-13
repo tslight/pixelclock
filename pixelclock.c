@@ -353,8 +353,10 @@ init_x(const char *display)
 
 	XMapWindow(x.dpy, x.win);
 
-	/* we want to know when we're exposed */
-	XSelectInput(x.dpy, x.win, ExposureMask);
+	/* we want to know when we're exposed and when the mouse enters or
+	   leaves the window */
+	XSelectInput(x.dpy, x.win, ExposureMask | EnterWindowMask | LeaveWindowMask);
+
 
 	XFlush(x.dpy);
 	XSync(x.dpy, False);

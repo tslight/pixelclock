@@ -360,6 +360,69 @@ init_x(const char *display)
 	XSync(x.dpy, False);
 }
 
+/* Logic stolen and adapted from xbattbar... */
+void showdiagbox(void) {
+	XSetWindowAttributes att;
+	int boxw, boxh;
+	char diagmsg[64];
+	time_t now = time(NULL);
+	struct tm *t = localtime(&now);
+	XftDraw *xftdraw = NULL;
+	XftFont *xftfont;
+	XftColor xftcolor;
+	XGlyphInfo extents;
+
+	strftime(diagmsg, sizeof(diagmsg), TimeFormat, t);
+	xftfont = XftFontOpenName(x.dpy, x.screen, DiagFont);
+	if (!xftfont)
+		errx(1, "XftFontOpenName failed for %s", DiagFont);
+	// Get width and height of message
+	XftTextExtentsUtf8(x.dpy, xftfont, (FcChar8 *)diagmsg, strlen(diagmsg),
+			   &extents);
+
+	boxw = extents.width + 20;
+	boxh = extents.height + 20;
+
+	if(winstat != -1) disposediagbox();
+	winstat = XCreateSimpleWindow(x.dpy, DefaultRootWindow(x.dpy),
+				      (x.dpy_width-boxw)/2,
+				      (x.dpy_height-boxh)/2,
+				      boxw, boxh,
+				      1,         // width
+				      x.magenta, //border
+				      x.black);  // background
+
+	att.override_redirect = True;
+	XChangeWindowAttributes(x.dpy, winstat, CWOverrideRedirect, &att);
+	XMapWindow(x.dpy, winstat);
+
+	xftdraw = XftDrawCreate(x.dpy,
+				winstat,
+				DefaultVisual(x.dpy, x.screen),
+				x.win_colormap);
+	XRenderColor render_color = { 0x0000,   // red
+				      0xffff,   // green
+				      0x0000,   // blue
+				      0xffff }; // opacity
+	XftColorAllocValue(x.dpy, DefaultVisual(x.dpy, x.screen),
+			   x.win_colormap, &render_color, &xftcolor);
+	XftDrawStringUtf8(xftdraw, &xftcolor, xftfont, 10, 30, (FcChar8 *)diagmsg,
+			  strlen(diagmsg));
+
+	// Free Xft resources
+	XftDrawDestroy(xftdraw);
+	XftFontClose(x.dpy, xftfont);
+	XftColorFree(x.dpy, DefaultVisual(x.dpy, x.screen),
+		     x.win_colormap, &xftcolor);
+}
+
+void disposediagbox(void) {
+	if ( winstat != -1 ) {
+		XDestroyWindow(x.dpy, winstat);
+		winstat = -1;
+	}
+}
+
 long
 getcolor(const char *color)
 {
@@ -368,7 +431,7 @@ getcolor(const char *color)
 	XColor tcolor;
 
 	if (!(rc = XAllocNamedColor(x.dpy, x.win_colormap, color, &tcolor,
-	&tcolor)))
+				    &tcolor)))
 		errx(1, "can't allocate %s", color);
 
 	return tcolor.pixel;

@@ -120,7 +120,7 @@ main(int argc, char* argv[])
 
 	bzero(&x, sizeof(struct xinfo));
 	x.size = DEFSIZE;
-	x.position = NULL;
+	x.position = 0;
 
 	while ((c = getopt_long_only(argc, argv, "", longopts, NULL)) != -1) {
 		switch (c) {

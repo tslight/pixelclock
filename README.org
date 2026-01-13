@@ -1,0 +1,19 @@
+* PIXELCLOCK
+
+A different way of looking at time.
+
+A fork of a really neat & simple clock widget for Xorg with an added dialog box
+that works the same as xbattbar as I often forget what day, month and year it
+is... :-/ !
+
+#+begin_src text
+usage: pixelclock [-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] [time time2 ...]
+#+end_src
+
+** Changes in this fork
+
+  - Add xbattbar inspired popup dialog box on hover that displays exact time &
+    date, but with modern xft font support.
+  - Change default times and colors to my personal preferences
+  - Fix some complilation errors and warnings
+  - Update Makefile to work on FreeBSD

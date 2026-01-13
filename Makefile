@@ -9,10 +9,9 @@ BINDIR	= $(DESTDIR)$(PREFIX)/bin
 
 INSTALL_PROGRAM = install -s
 
-X11BASE	= /usr/X11R6
-INCLUDES= -I$(X11BASE)/include
-LDPATH	= -L$(X11BASE)/lib
-LIBS	= -lX11
+INCLUDES= -I/usr/local/include -I/usr/local/include/freetype2
+LDPATH	= -L/usr/local/lib
+LIBS	= -lX11 -lXft
 
 PROG	= pixelclock
 OBJS	= pixelclock.o

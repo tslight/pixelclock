@@ -74,6 +74,10 @@ struct xinfo {
 	char position;
 	GC gc;
 	Colormap win_colormap;
+	unsigned long yellow;
+	unsigned long magenta;
+	unsigned long green;
+	unsigned long black;
 } x;
 
 const struct option longopts[] = {

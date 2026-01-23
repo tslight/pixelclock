@@ -55,6 +55,9 @@
 /* default position is along the right side */
 #define DEFPOS 'r'
 
+/* always on top of other windows */
+#define RAISE 1
+
 /* default font & time format of dialog window */
 #define DiagFont "monospace:bold:size=18"
 #define TimeFormat "%H:%M %A %d %B %Y"
@@ -219,6 +222,10 @@ main(int argc, char* argv[])
 					showdiagbox();
 				} else if (event.type == LeaveNotify) {
 					disposediagbox();
+				} else if (event.type == LeaveNotify) {
+					disposediagbox();
+				} else if (event.type == VisibilityNotify) {
+					if (RAISE) XRaiseWindow(x.dpy, x.win);
 				} else if (event.type == Expose) {
 					lastpos = -1;
 				}
@@ -357,8 +364,10 @@ init_x(const char *display)
 
 	/* we want to know when we're exposed and when the mouse enters or
 	   leaves the window */
-	XSelectInput(x.dpy, x.win, ExposureMask | EnterWindowMask | LeaveWindowMask);
-
+	XSelectInput(x.dpy, x.win, ExposureMask|
+				   EnterWindowMask|
+				   LeaveWindowMask|
+				   VisibilityChangeMask);
 
 	XFlush(x.dpy);
 	XSync(x.dpy, False);

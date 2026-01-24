@@ -55,15 +55,15 @@
 /* default position is along the right side */
 #define DEFPOS 'r'
 
-/* always on top of other windows */
-#define RAISE 1
-
 /* default font & time format of dialog window */
 #define DiagFont "monospace:bold:size=18"
 #define TimeFormat "%H:%M %A %d %B %Y"
 
 /* so our window manager knows us */
 char* win_name = "pixelclock";
+
+/* whether or not to keep on top of other windows */
+static int above = 0;
 
 /* default hours to highlight (3,6,9am 12,15,18,21pm) */
 const float defhours[7] = { 3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0 };
@@ -86,6 +86,7 @@ struct xinfo {
 const struct option longopts[] = {
 	{ "display",	required_argument,	NULL,	'd' },
 	{ "size",	required_argument,	NULL,	's' },
+	{ "above",	no_argument,		NULL,	'a' },
 	{ "left",	no_argument,		NULL,	'l' },
 	{ "right",	no_argument,		NULL,	'r' },
 	{ "top",	no_argument,		NULL,	't' },
@@ -128,6 +129,9 @@ main(int argc, char* argv[])
 
 	while ((c = getopt_long_only(argc, argv, "", longopts, NULL)) != -1) {
 		switch (c) {
+		case 'a':
+			above = 1;
+			break;
 		case 'd':
 			display = optarg;
 			break;
@@ -225,7 +229,7 @@ main(int argc, char* argv[])
 				} else if (event.type == LeaveNotify) {
 					disposediagbox();
 				} else if (event.type == VisibilityNotify) {
-					if (RAISE) XRaiseWindow(x.dpy, x.win);
+					if (above) XRaiseWindow(x.dpy, x.win);
 				} else if (event.type == Expose) {
 					lastpos = -1;
 				}
@@ -463,8 +467,9 @@ void
 usage(void)
 {
 	fprintf(stderr, "usage: %s %s\n", __progname,
-		"[-display host:dpy] "
 		"[-help] "
+		"[-above] "
+		"[-display host:dpy] "
 		"[-left|-right|-top|-bottom] "
 		"[-size <pixels>] "
 		"[time1 time2 ... <HH:MM>]");

@@ -7,14 +7,13 @@ that works the same as xbattbar as I often forget what day, month and year it
 is... :-/ !
 
 #+begin_src text
-usage: pixelclock [-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] [time time2 ...]
+  usage: pixelclock [-help] [-above] [-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] [time1 time2 ... <HH:MM>]
 #+end_src
 
 ** Changes in this fork
 
-  - Add xbattbar inspired popup dialog box on hover that displays exact time &
-    date, but with modern xft font support.
-  - Always on top by default
-  - Change default times and colors to my personal preferences
-  - Fix some complilation errors and warnings
-  - Update Makefile to work on FreeBSD
+  - Add xbattbar inspired popup, but with modern Xft font support.
+  - Add ~-above~ option to keep pixelclock on top of all windows.
+  - Change default times and colors to my personal preferences.
+  - Fix some complilation errors and warnings.
+  - Update FreeBSD specific Makefile.

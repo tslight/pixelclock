@@ -51,7 +51,8 @@
 
 /* default clock size */
 #define DEFSIZE 4
-
+/* whether or not to keep on top of other windows */
+#define DEFRAISE 1
 /* default position is along the right side */
 #define DEFPOS 'r'
 
@@ -62,8 +63,7 @@
 /* so our window manager knows us */
 char* win_name = "pixelclock";
 
-/* whether or not to keep on top of other windows */
-static int above = 0;
+static int above = DEFRAISE;
 
 /* default hours to highlight (3,6,9am 12,15,18,21pm) */
 const float defhours[7] = { 3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0 };
@@ -86,7 +86,7 @@ struct xinfo {
 const struct option longopts[] = {
 	{ "display",	required_argument,	NULL,	'd' },
 	{ "size",	required_argument,	NULL,	's' },
-	{ "above",	no_argument,		NULL,	'a' },
+	{ "unraise",	no_argument,		NULL,	'u' },
 	{ "left",	no_argument,		NULL,	'l' },
 	{ "right",	no_argument,		NULL,	'r' },
 	{ "top",	no_argument,		NULL,	't' },
@@ -129,9 +129,6 @@ main(int argc, char* argv[])
 
 	while ((c = getopt_long_only(argc, argv, "", longopts, NULL)) != -1) {
 		switch (c) {
-		case 'a':
-			above = 1;
-			break;
 		case 'd':
 			display = optarg;
 			break;
@@ -153,6 +150,9 @@ main(int argc, char* argv[])
 			if (*p || x.size < 1)
 				errx(1, "illegal value -- %s", optarg);
 				/* NOTREACHED */
+			break;
+		case 'u':
+			above = 0;
 			break;
 		case 'h':
 			usage();
@@ -468,7 +468,7 @@ usage(void)
 {
 	fprintf(stderr, "usage: %s %s\n", __progname,
 		"[-help] "
-		"[-above] "
+		"[-unraise] "
 		"[-display host:dpy] "
 		"[-left|-right|-top|-bottom] "
 		"[-size <pixels>] "

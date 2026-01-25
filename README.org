@@ -7,13 +7,14 @@ dialog box, that works the same as xbattbar as I often forget what day, month
 and year it is... :-/ !
 
 #+begin_src text
-  usage: pixelclock [-help] [-above] [-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] [time1 time2 ... <HH:MM>]
+  usage: pixelclock [-help] [-unraise] [-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] [time1 time2 ... <HH:MM>]
 #+end_src
 
 ** Changes in this fork
 
-  - Add xbattbar inspired popup, but with modern Xft font support.
-  - Add ~-above~ option to keep pixelclock on top of all windows.
+  - Add =xbattbar= inspired popup, but with modern Xft font support.
+  - Default to keeping =pixelclock= on top of other windows.
+  - Provide =-unraise= flag to override this behavior.
   - Change default times and colors to my personal preferences.
   - Fix some complilation errors and warnings.
-  - Update FreeBSD specific Makefile.
+  - Update to a *FreeBSD* specific Makefile.

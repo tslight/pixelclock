@@ -113,9 +113,9 @@ static void redraw(void) {
     /* draw the current time */
     XSetForeground(x.dpy, x.gc, x.yellow);
     if (x.position == 'b' || x.position == 't')
-      XFillRectangle(x.dpy, x.bar, x.gc, pc.newpos, 0, 2, x.size);
+      XFillRectangle(x.dpy, x.bar, x.gc, pc.newpos, 0, 6, x.size);
     else
-      XFillRectangle(x.dpy, x.bar, x.gc, 0, pc.newpos, x.size, 2);
+      XFillRectangle(x.dpy, x.bar, x.gc, 0, pc.newpos, x.size, 6);
 
     /* draw the hour ticks */
     XSetForeground(x.dpy, x.gc, x.magenta);

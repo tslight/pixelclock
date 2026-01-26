@@ -1,9 +1,8 @@
-# $Id: Makefile,v 1.4 2005/06/28 22:06:12 jcs Exp $
-# vim:ts=8
-
 CC	= cc
-CFLAGS	= -O2 -Wall -Wunused -Wmissing-prototypes -Wstrict-prototypes
-
+CFLAGS  = -O2 -pedantic -std=c11
+CFLAGS += -Wall -Wconversion -Wextra -Wshadow -Wunused
+CFLAGS += -Wmissing-prototypes -Wstrict-prototypes
+CFLAGS += -Wuninitialized -Wimplicit-fallthrough
 PREFIX	= /usr/local
 BINDIR	= $(DESTDIR)$(PREFIX)/bin
 
@@ -23,7 +22,7 @@ all: $(PROG)
 $(PROG): $(OBJS)
 	$(CC) $(OBJS) $(LDPATH) $(LIBS) -o $@
 
-$(OBJS): *.o: *.c
+$(OBJS): *.o: *.c: *.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 install: all

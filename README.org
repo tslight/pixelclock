@@ -2,19 +2,38 @@
 
 /"A different way of looking at time."/
 
-A fork of a really neat & simple clock widget for Xorg with an added popup
-dialog box, that works the same as xbattbar as I often forget what day, month
-and year it is... :-/ !
+Fork of a really neat & simple clock widget for Xorg with an added popup dialog
+box, as I often forget what day, month and year it is... :-/ !
+
+It's now a pretty /big/ refactor/clean-up driven by the work I did on it's
+counterpart [[https://github.com/tslight/pixelbatt][pixelbatt]]...
+
+*N.B.* I'm very new to C, and primarily using this and [[https://github.com/tslight/pixelbatt][pixelbatt]] as a learning
+exercise, so /buyer beware/, /here be dragons/, etc, etc.
+
+/Works on my machine(TM)/, though, but your mileage may vary...
+
+Also, I'd sincerely appreciate constructive criticism from any experienced C
+programmers who happen to stumble upon this...
+
+* Usage
 
 #+begin_src text
-  usage: pixelclock [-help] [-unraise] [-display host:dpy] [-left|-right|-top|-bottom] [-size <pixels>] [time1 time2 ... <HH:MM>]
+  pixelclock: usage:
+  [-size <pixels>]            Width of bar in pixels.
+  [-font <xftfont>]           Defaults to 'monospace:bold:size=18'.
+  [-display <host:dpy>]       Specify a display to use.
+  [-unraise]                  Prevents bar from always being on top.
+  [-left|-right|-top|-bottom] Specify screen edge.
+  [time1 time2 ... <HH:MM>]   Specify times to highlight.
 #+end_src
 
-** Changes in this fork
+* Changes in this fork
 
-  - Add =xbattbar= inspired popup, but with modern Xft font support.
-  - Default to keeping =pixelclock= on top of other windows.
-  - Provide =-unraise= flag to override this behavior.
-  - Change default times and colors to my personal preferences.
-  - Fix some complilation errors and warnings.
-  - Update to a *FreeBSD* specific Makefile.
+- Add =xbattbar= inspired popup, but with modern Xft font support.
+- Default to keeping =pixelclock= on top of other windows.
+- Provide =-unraise= flag to override this behavior.
+- Change default times and colors to my personal preferences.
+- Update to a *FreeBSD* specific Makefile with stricter =CFLAGS=.
+- Fix A LOT of compilation warnings!
+- Big Re/style/format/factor!

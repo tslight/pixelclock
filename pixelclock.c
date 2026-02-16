@@ -120,7 +120,7 @@ redraw(void)
 		errx(1, "localtime");
 
 	pc.newpos = (pc.hourtick * t->tm_hour) +
-	    (float)(((float)t->tm_min / 60.0) * pc.hourtick) - 3;
+	    (int)(((float)t->tm_min / 60.0) * pc.hourtick) - 3;
 
 	/* only redraw if our time changed enough to move the box */
 	if (pc.newpos != pc.lastpos) {
@@ -150,11 +150,14 @@ redraw(void)
 		for (int i = 0; i < pc.nhihours; i++)
 			if (x.position == 'b' || x.position == 't')
 				XFillRectangle(x.dpy, x.bar, x.gc,
-				    (int)(pc.hihours[i] * pc.hourtick), 0, 2,
-				    x.size);
+					       (int)(pc.hihours[i] *
+						     (float)pc.hourtick),
+					       0, 2, x.size);
 			else
 				XFillRectangle(x.dpy, x.bar, x.gc, 0,
-				    (int)(pc.hihours[i] * pc.hourtick), x.size,
+					       (int)(pc.hihours[i] *
+						     (float)pc.hourtick),
+					       x.size,
 				    2);
 
 		pc.lastpos = pc.newpos;
@@ -354,7 +357,8 @@ main(int argc, char *argv[])
 	} else {
 		/* get times from args */
 		pc.nhihours = argc;
-		if ((pc.hihours = alloca(pc.nhihours * sizeof(float))) == NULL)
+		if ((pc.hihours = alloca(
+			     (uint)pc.nhihours * sizeof(float))) == NULL)
 			err(1, NULL);
 
 		for (int i = 0; i < argc; ++i) {
@@ -370,7 +374,7 @@ main(int argc, char *argv[])
 			if (h > 23 || h < 0 || m > 59 || m < 0)
 				errx(1, "Invalid time %s", argv[i]);
 
-			pc.hihours[i] = h + (m / 60.0);
+			pc.hihours[i] = (float)(h + (m / 60.0));
 		}
 	}
 

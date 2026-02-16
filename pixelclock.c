@@ -157,8 +157,7 @@ redraw(void)
 				XFillRectangle(x.dpy, x.bar, x.gc, 0,
 					       (int)(pc.hihours[i] *
 						     (float)pc.hourtick),
-					       x.size,
-				    2);
+					       x.size, 2);
 
 		pc.lastpos = pc.newpos;
 
@@ -388,9 +387,8 @@ main(int argc, char *argv[])
 	}
 
 	/* each hour will be this many pixels away */
-	pc.hourtick = ((x.position == 'b' || x.position == 't') ? x.width :
-								  x.height) /
-	    24;
+	pc.hourtick = ((x.position == 'b' || x.position == 't') ?
+		       x.width : x.height) / 24;
 
 	redraw();
 

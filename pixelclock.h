@@ -23,9 +23,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#define DEFFONT	 "monospace:bold:size=18"
+#define DEFFONT	 "monospace:bold:size=13"
 #define DEFHIDE	 98
-#define DEFPOS	 'r'
+#define DEFPOS	 't'
 #define DEFPOLL	 10
 #define DEFRAISE 1
 #define DEFSIZE	 4
@@ -57,13 +57,15 @@ static struct xinfo {
 	XftColor fontcolor;
 } x;
 
-static const struct option longopts[] = { { "font", required_argument, NULL,
-					      'f' },
+static const struct option longopts[] = {
+	{ "font", required_argument, NULL, 'f' },
 	{ "size", required_argument, NULL, 's' },
 	{ "display", required_argument, NULL, 'd' },
 	{ "unraise", no_argument, NULL, 'u' },
-	{ "left", no_argument, NULL, 'l' }, { "right", no_argument, NULL, 'r' },
-	{ "top", no_argument, NULL, 't' }, { "bottom", no_argument, NULL, 'b' },
+	{ "left", no_argument, NULL, 'l' },
+	{ "right", no_argument, NULL, 'r' },
+	{ "top", no_argument, NULL, 't' },
+	{ "bottom", no_argument, NULL, 'b' },
 	{ NULL, 0, NULL, 0 } };
 
 static struct pclock_t {

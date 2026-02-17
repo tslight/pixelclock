@@ -2,19 +2,20 @@
 
 /"A different way of looking at time."/
 
-Fork of a really neat & simple clock widget for Xorg with an added popup dialog
-box, as I often forget what day, month and year it is... :-/ !
+Fork of a really neat & simple clock widget for Xorg with an added
+popup dialog box, as I often forget what day, month and year it
+is... :-/ !
 
-It's now a pretty /big/ refactor/clean-up driven by the work I did on it's
-counterpart [[https://github.com/tslight/pixelbatt][pixelbatt]]...
+It's now a pretty /big/ refactor/clean-up driven by the work I did on
+it's counterpart [[https://github.com/tslight/pixelbatt][pixelbatt]]...
 
-*N.B.* I'm very new to C, and primarily using this and [[https://github.com/tslight/pixelbatt][pixelbatt]] as a learning
-exercise, so /buyer beware/, /here be dragons/, etc, etc.
+*N.B.* I'm very new to C, and primarily using this and [[https://github.com/tslight/pixelbatt][pixelbatt]] as a
+learning exercise, so /buyer beware/, /here be dragons/, etc, etc.
 
 /Works on my machine(TM)/, though, but your mileage may vary...
 
-Also, I'd sincerely appreciate constructive criticism from any experienced C
-programmers who happen to stumble upon this...
+Also, I'd sincerely appreciate constructive criticism from any
+experienced C programmers who happen to stumble upon this...
 
 * Usage
 
@@ -34,6 +35,6 @@ programmers who happen to stumble upon this...
 - Default to keeping =pixelclock= on top of other windows.
 - Provide =-unraise= flag to override this behavior.
 - Change default times and colors to my personal preferences.
-- Update to a *FreeBSD* specific Makefile with stricter =CFLAGS=.
-- Fix A LOT of compilation warnings!
+- Update to a portable Makefile with =pkg-config= & stricter =CFLAGS=.
+- Fix many compiler warnings!
 - Big Re/style/format/factor!

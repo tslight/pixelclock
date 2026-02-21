@@ -14,13 +14,13 @@ static void
 usage(void)
 {
 	errx(1,
-	    "usage:\n"
-	    "[-size <pixels>]            Width of bar in pixels.\n"
-	    "[-font <xftfont>]           Defaults to 'monospace:bold:size=18'.\n"
-	    "[-display <host:dpy>]       Specify a display to use.\n"
-	    "[-unraise]                  Prevents bar from always being on top.\n"
-	    "[-left|-right|-top|-bottom] Specify screen edge.\n"
-	    "[time1 time2 ... <HH:MM>]   Specify times to highlight.");
+	     "usage:\n"
+	     "[-size <pixels>]            Width of bar in pixels.\n"
+	     "[-font <xftfont>]           Defaults to 'monospace:bold:size=18'.\n"
+	     "[-display <host:dpy>]       Specify a display to use.\n"
+	     "[-unraise]                  Prevents bar from always being on top.\n"
+	     "[-left|-right|-top|-bottom] Specify screen edge.\n"
+	     "[time1 time2 ... <HH:MM>]   Specify times to highlight.");
 }
 
 static void
@@ -53,12 +53,12 @@ show_popup(void)
 
 	// Get width and height of message
 	XftTextExtentsUtf8(x.dpy, x.font, (FcChar8 *)msg, (int)strlen(msg),
-	    &extents);
+			   &extents);
 
 	int boxw = extents.xOff +
-	    2 * padw; // offset better than width for some reason!
+		2 * padw; // offset better than width for some reason!
 	int boxh = (x.font->ascent + x.font->descent) +
-	    2 * padh; // reliable line height
+		2 * padh; // reliable line height
 	/* clamp to screen size to avoid (unsigned) wrapping and BadValue */
 	if (boxw > x.width)
 		boxw = x.width - 2;
@@ -74,34 +74,34 @@ show_popup(void)
 	if (x.popup == None) {
 		/* create once; resize/move on subsequent shows */
 		x.popup = XCreateSimpleWindow(x.dpy, DefaultRootWindow(x.dpy),
-		    left, top, (unsigned int)boxw, (unsigned int)boxh, 1,
-		    x.magenta, x.black);
+					      left, top, (unsigned int)boxw, (unsigned int)boxh, 1,
+					      x.magenta, x.black);
 		att.override_redirect = True;
 		XChangeWindowAttributes(x.dpy, x.popup, CWOverrideRedirect,
-		    &att);
+					&att);
 	} else {
 		XMoveResizeWindow(x.dpy, x.popup, left, top, (unsigned int)boxw,
-		    (unsigned int)boxh);
+				  (unsigned int)boxh);
 	}
 
 	XMapRaised(x.dpy, x.popup);
 
 	xftdraw = XftDrawCreate(x.dpy, x.popup, DefaultVisual(x.dpy, x.screen),
-	    x.colormap);
+				x.colormap);
 	if (!xftdraw)
 		err(1, "XftDrawCreate");
 
 	static XRenderColor font_green = { 0x0000, 0xffff, 0x0000, 0xffff };
 
 	if (!XftColorAllocValue(x.dpy, DefaultVisual(x.dpy, x.screen),
-		x.colormap, &font_green, &x.fontcolor))
+				x.colormap, &font_green, &x.fontcolor))
 		err(1, "XftColorAllocValue");
 	XftDrawStringUtf8(xftdraw, &x.fontcolor, x.font, padw,
-	    padh + x.font->ascent, (FcChar8 *)msg, (int)strlen(msg));
+			  padh + x.font->ascent, (FcChar8 *)msg, (int)strlen(msg));
 
 	XftDrawDestroy(xftdraw); // Free Xft resources
 	XftColorFree(x.dpy, DefaultVisual(x.dpy, x.screen), x.colormap,
-	    &x.fontcolor);
+		     &x.fontcolor);
 	XFlush(x.dpy);
 }
 
@@ -120,7 +120,7 @@ redraw(void)
 		errx(1, "localtime");
 
 	pc.newpos = (pc.hourtick * t->tm_hour) +
-	    (int)(((float)t->tm_min / 60.0) * pc.hourtick) - 3;
+		(int)(((float)t->tm_min / 60.0) * pc.hourtick) - 3;
 
 	/* only redraw if our time changed enough to move the box */
 	if (pc.newpos != pc.lastpos) {
@@ -130,20 +130,20 @@ redraw(void)
 		XSetForeground(x.dpy, x.gc, x.yellow);
 		if (x.position == 'b' || x.position == 't')
 			XFillRectangle(x.dpy, x.bar, x.gc, pc.newpos, 0, 6,
-			    x.size);
+				       x.size);
 		else
 			XFillRectangle(x.dpy, x.bar, x.gc, 0, pc.newpos, x.size,
-			    6);
+				       6);
 
 		/* draw the hour ticks */
 		XSetForeground(x.dpy, x.gc, x.magenta);
 		for (y = 1; y <= 23; y++)
 			if (x.position == 'b' || x.position == 't')
 				XFillRectangle(x.dpy, x.bar, x.gc,
-				    (y * pc.hourtick), 0, 2, x.size);
+					       (y * pc.hourtick), 0, 2, x.size);
 			else
 				XFillRectangle(x.dpy, x.bar, x.gc, 0,
-				    (y * pc.hourtick), x.size, 2);
+					       (y * pc.hourtick), x.size, 2);
 
 		/* highlight requested times */
 		XSetForeground(x.dpy, x.gc, x.green);
@@ -172,7 +172,7 @@ getcolor(const char *color)
 	XColor tcolor;
 
 	if (!(rc = XAllocNamedColor(x.dpy, x.colormap, color, &tcolor,
-		  &tcolor)))
+				    &tcolor)))
 		err(1, "can't allocate %s", color);
 
 	return tcolor.pixel;
@@ -192,7 +192,7 @@ init_x(const char *display)
 
 	if (ConnectionNumber(x.dpy) >= FD_SETSIZE)
 		errx(1,
-		    "X connection fd >= FD_SETSIZE; cannot use select() safely");
+		     "X connection fd >= FD_SETSIZE; cannot use select() safely");
 
 	x.screen = DefaultScreen(x.dpy);
 	x.width = DisplayWidth(x.dpy, x.screen);
@@ -235,8 +235,8 @@ init_x(const char *display)
 	}
 
 	x.bar = XCreateSimpleWindow(x.dpy, RootWindow(x.dpy, x.screen), left,
-	    top, (unsigned int)width, (unsigned int)height, 0, x.black,
-	    x.black);
+				    top, (unsigned int)width, (unsigned int)height, 0, x.black,
+				    x.black);
 
 	if (!(rc = XStringListToTextProperty(&progname, 1, &progname_prop)))
 		err(1, "XStringListToTextProperty");
@@ -246,7 +246,7 @@ init_x(const char *display)
 		XFree(progname_prop.value);
 
 	attributes.override_redirect =
-	    True; // brute force position/size and decoration
+		True; // brute force position/size and decoration
 	XChangeWindowAttributes(x.dpy, x.bar, CWOverrideRedirect, &attributes);
 
 	if (!(x.gc = XCreateGC(x.dpy, x.bar, 0, &values)))
@@ -255,8 +255,8 @@ init_x(const char *display)
 	XMapWindow(x.dpy, x.bar);
 
 	XSelectInput(x.dpy, x.bar,
-	    ExposureMask | EnterWindowMask | LeaveWindowMask |
-		VisibilityChangeMask);
+		     ExposureMask | EnterWindowMask | LeaveWindowMask |
+		     VisibilityChangeMask);
 
 	XFlush(x.dpy);
 	XSync(x.dpy, False);
@@ -284,6 +284,34 @@ safe_atoui(const char *a, unsigned *ui)
 	if (errno == ERANGE || l > UINT_MAX)
 		err(1, "out of range: %s", a);
 	*ui = (unsigned int)l;
+}
+
+static int
+obscured_by_override_redirect(void)
+{
+	Window root, parent, *children;
+	unsigned int nchildren;
+	int result = 0;
+
+	if (!XQueryTree(x.dpy, DefaultRootWindow(x.dpy), &root, &parent,
+			&children, &nchildren) || nchildren == 0)
+		return 0;
+
+	/* children are in bottom-to-top order; walk from top down */
+	for (int i = (int)nchildren - 1; i >= 0; i--) {
+		if (children[i] == x.bar || children[i] == x.popup)
+			continue;
+		XWindowAttributes wa;
+		if (XGetWindowAttributes(x.dpy, children[i], &wa) &&
+		    wa.map_state == IsViewable) {
+			result = wa.override_redirect;
+			break;
+		}
+	}
+
+	if (children)
+		XFree(children);
+	return result;
 }
 
 int
@@ -380,9 +408,8 @@ main(int argc, char *argv[])
 	init_x(display);
 
 	if (x.size > (uint)x.width - 1) {
-		warnx(
-		    "%d is bigger than the display! Falling back to %d pixels.",
-		    x.size, x.width - 1);
+		warnx("%d is bigger than the display! Falling back to %d pixels.",
+		      x.size, x.width - 1);
 		x.size = (uint)x.width - 1;
 	}
 
@@ -419,7 +446,7 @@ main(int argc, char *argv[])
 				} else if (event.type == LeaveNotify) {
 					kill_popup();
 				} else if (event.type == VisibilityNotify) {
-					if (above)
+					if (above && !obscured_by_override_redirect())
 						XRaiseWindow(x.dpy, x.bar);
 				} else if (event.type == Expose) {
 					pc.lastpos = -1;

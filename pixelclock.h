@@ -24,23 +24,15 @@
 #include <unistd.h>
 
 #define DEFFONT	 "monospace:bold:size=13"
-#define DEFHIDE	 98
-#define DEFPOS	 't'
-#define DEFPOLL	 10
-#define DEFRAISE 1
-#define DEFSIZE	 4
-#define DEFWARN	 10
+#define DEFPOS	 'r'
+#define DEFSIZE	 5
 #define TIMEFMT	 "%H:%M %A %d %B %Y"
 
 static const float defhours[7] = { 3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0 };
 
 static volatile sig_atomic_t terminate = 0;
 static char *progname;
-static unsigned int above = DEFRAISE; // always on top by default
-static unsigned int hidepct = DEFHIDE;
 static char *font = DEFFONT;
-static int ac_line, time_remaining;
-static unsigned int battery_life;
 
 static struct xinfo {
 	Display *dpy;
@@ -61,7 +53,6 @@ static const struct option longopts[] = {
 	{ "font", required_argument, NULL, 'f' },
 	{ "size", required_argument, NULL, 's' },
 	{ "display", required_argument, NULL, 'd' },
-	{ "unraise", no_argument, NULL, 'u' },
 	{ "left", no_argument, NULL, 'l' },
 	{ "right", no_argument, NULL, 'r' },
 	{ "top", no_argument, NULL, 't' },

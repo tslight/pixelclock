@@ -18,7 +18,6 @@ usage(void)
 	     "[-size <pixels>]            Width of bar in pixels.\n"
 	     "[-font <xftfont>]           Defaults to 'monospace:bold:size=18'.\n"
 	     "[-display <host:dpy>]       Specify a display to use.\n"
-	     "[-unraise]                  Prevents bar from always being on top.\n"
 	     "[-left|-right|-top|-bottom] Specify screen edge.\n"
 	     "[time1 time2 ... <HH:MM>]   Specify times to highlight.");
 }
@@ -160,7 +159,6 @@ redraw(void)
 					       x.size, 2);
 
 		pc.lastpos = pc.newpos;
-
 		XFlush(x.dpy);
 	}
 }
@@ -286,34 +284,6 @@ safe_atoui(const char *a, unsigned *ui)
 	*ui = (unsigned int)l;
 }
 
-static int
-obscured_by_override_redirect(void)
-{
-	Window root, parent, *children;
-	unsigned int nchildren;
-	int result = 0;
-
-	if (!XQueryTree(x.dpy, DefaultRootWindow(x.dpy), &root, &parent,
-			&children, &nchildren) || nchildren == 0)
-		return 0;
-
-	/* children are in bottom-to-top order; walk from top down */
-	for (int i = (int)nchildren - 1; i >= 0; i--) {
-		if (children[i] == x.bar || children[i] == x.popup)
-			continue;
-		XWindowAttributes wa;
-		if (XGetWindowAttributes(x.dpy, children[i], &wa) &&
-		    wa.map_state == IsViewable) {
-			result = wa.override_redirect;
-			break;
-		}
-	}
-
-	if (children)
-		XFree(children);
-	return result;
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -358,9 +328,6 @@ main(int argc, char *argv[])
 			break;
 		case 's':
 			safe_atoui(optarg, &x.size);
-			break;
-		case 'u':
-			above = 0;
 			break;
 		default:
 			usage();
@@ -445,9 +412,6 @@ main(int argc, char *argv[])
 					show_popup();
 				} else if (event.type == LeaveNotify) {
 					kill_popup();
-				} else if (event.type == VisibilityNotify) {
-					if (above && !obscured_by_override_redirect())
-						XRaiseWindow(x.dpy, x.bar);
 				} else if (event.type == Expose) {
 					pc.lastpos = -1;
 				}
